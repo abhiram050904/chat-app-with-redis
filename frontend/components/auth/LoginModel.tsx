@@ -11,7 +11,15 @@ import {
   } from "@/components/ui/dialog"
 import { Button } from '../ui/button'
 import Image from 'next/image'
+import { signIn } from 'next-auth/react'
 const LoginModel = () => {
+
+  const handleLogin=()=>{
+    signIn("google",{
+      callbackUrl:"/dashboard",
+      redirect:true
+    })
+  }
   return (
     <div>
       <Dialog>
@@ -23,7 +31,7 @@ const LoginModel = () => {
         makes effortless secure chat links.start conversations in seconds
       </DialogDescription>
     </DialogHeader>
-    <Button variant={'outline'}>
+    <Button variant={'outline'} onClick={handleLogin}>
         <Image src={googleimage} alt='google' className='mr-4' width={25} height={25}/>
         Continue with Google
     </Button>

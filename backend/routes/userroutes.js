@@ -5,4 +5,4 @@ const router=express.Router()
 
 router.post("/auth/login",login)
 
-module.exports={router}
+module.exports = router;

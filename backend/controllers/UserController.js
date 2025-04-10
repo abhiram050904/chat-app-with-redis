@@ -1,4 +1,4 @@
-const prisma = require("../configurations/db");
+const prisma = require("../configurations/db")
 const jwt = require("jsonwebtoken");
 require("dotenv").config(); // Load environment variables
 
@@ -31,7 +31,7 @@ const login = async (req, res) => {
 
         // Set Authorization header
         res.setHeader("Authorization", `Bearer ${token}`);
-
+        console.log(findUser)
         return res.status(200).json({ 
             success: true, 
             user: findUser, 
