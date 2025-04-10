@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(191)
+  email     String   @db.VarChar(191) @unique
+  provider  String   @db.VarChar(100)  // e.g., "google", "github", "email"
+  image     String?  // Profile image (optional)
+  oauth_id  String   @unique           // Unique OAuth ID
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt        // Auto-updates when modified
+
+  @@map("users")
+}
