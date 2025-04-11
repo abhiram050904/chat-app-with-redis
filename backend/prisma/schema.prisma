@@ -35,9 +35,10 @@ model ChatGroup {
 }
 
 model GroupUsers {
-  id       Int       @id @default(autoincrement())
-  group    ChatGroup @relation(fields: [group_id], references: [id], onDelete: Cascade)
-  group_id String
-  name String
-  created_at DateTime @default(now())
+  id         Int       @id @default(autoincrement())
+  group      ChatGroup @relation(fields: [group_id], references: [id], onDelete: Cascade)
+  group_id   String    @db.Uuid  
+  name       String
+  created_at DateTime  @default(now())
 }
+
