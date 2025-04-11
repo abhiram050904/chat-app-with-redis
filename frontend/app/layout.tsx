@@ -1,21 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "./providers/SessionProvider";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Chat-app",
-  description: "built to learn redis and kafkas",
+  description: "Built to learn Redis and Kafka",
 };
 
 export default function RootLayout({
@@ -25,13 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <SessionProvider>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-        {children}
-      </body>
+      <body>
+        <SessionProvider>
+          <Toaster richColors duration={10000} />
+          {children}
         </SessionProvider>
+      </body>
     </html>
   );
 }
