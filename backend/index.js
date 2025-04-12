@@ -44,13 +44,27 @@ httpserver.listen(port,()=>{
     console.log(`app is runing on port:`,port )
 })
 
-io.on("connection", (socket) => {
-    console.log("The socket is connected:", socket.id);
+io.use((socket, next) => {
+    const room = socket.handshake.auth.room || socket.handshake.headers.room;
+    if (!room) {
+        return next(new Error("invalid room.Please pass the room number"));
+    }
+    socket.room = room;
+    next();
+});
 
-    socket.on("message",(data)=>{
-        console.log("Server side message",data)
-        socket.broadcast.emit("message",data)
-    })
+io.on("connection", (socket) => {
+    socket.join(socket.room);
+    console.log(`Socket ${socket.id} joined room ${socket.room}`);
+
+    socket.on("message", (data) => {
+        console.log("Server side message:", data);
+
+        // Emit only to others in the same room
+        socket.to(socket.room).emit("message", data);
+
+        socket.emit("message", data);
+    });
 
     socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id);

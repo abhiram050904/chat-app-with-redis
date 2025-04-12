@@ -13,7 +13,7 @@ const ChatPage = async ({ params }: PageProps) => {
   return (
     <div>
       <h1>Hello, I am chat</h1>
-      <ChatBase/>
+      <ChatBase groupId={params.id}/>
     </div>
   );
 };

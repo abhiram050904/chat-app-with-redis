@@ -5,12 +5,14 @@ import React, { useEffect, useRef } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 import { Button } from '../ui/button';
 
-const ChatBase = () => {
-  const socketRef = useRef(getSocket());
-
+const ChatBase = ({groupId}:{groupId:string}) => {
+  const socketRef = useRef(getSocket(groupId));
+  
   useEffect(() => {
     const socket = socketRef.current;
-
+    socket.auth={
+      room:groupId
+    }
     if (!socket.connected) {
       socket.connect();
     }
