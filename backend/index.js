@@ -3,25 +3,41 @@ const cors=require('cors')
 const dotenv=require('dotenv')
 const userroutes=require('./routes/userroutes')
 const {Server}=require('socket.io')
+const { instrument } = require("@socket.io/admin-ui");
 const {createServer} =require("http")
+const { createAdapter } =require("@socket.io/redis-streams-adapter");
+const redis = require('./configurations/redis')
 dotenv.config()
 
 
 const port=process.env.PORT
 const app=express()
 const httpserver=createServer(app)
-const io=new Server(httpserver,{
-    cors:{
-        origin:"*"
-    }
-})
+
 app.use(cors({
-    origin: "http://localhost:3000",  
-    credentials: true 
-}));
-app.use(express.json())
-app.use('/api',userroutes)
-app.use(express.urlencoded({extended:false}))
+    origin: ["http://localhost:3000", "https://admin.socket.io"],
+    credentials: true
+  }));
+
+  
+  app.use(express.json())
+  app.use('/api',userroutes)
+  app.use(express.urlencoded({extended:false}))
+
+const io=new Server(httpserver,{
+    cors: {
+             origin: ["http://localhost:3000", "https://admin.socket.io"], // removed extra space
+            credentials: true
+          },
+    adapter:createAdapter(redis)
+})
+
+instrument(io, {
+    auth: false,
+    mode: "development",
+  });
+  
+
 
 
 httpserver.listen(port,()=>{
