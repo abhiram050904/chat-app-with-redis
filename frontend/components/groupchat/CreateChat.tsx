@@ -17,6 +17,7 @@ import { CustomUser } from '@/app/api/auth/[...nextauth]/options'
 import axios, { AxiosError } from 'axios'
 import { toast } from 'sonner'
 import { CHAT_GROUP_URL } from '@/lib/apiEndPoints'
+import { clearCache } from '@/actions/common'
 
 // ✅ Validation Schema
 const ValidationSchema = z.object({
@@ -50,6 +51,9 @@ const CreateChat = ({ user }: { user: CustomUser }) => {
                 }
             })
 
+            if(response.data){
+                clearCache("dashboard")
+            }
             console.log('response from backend',response)
             toast.success("Chat group created successfully!");
 
