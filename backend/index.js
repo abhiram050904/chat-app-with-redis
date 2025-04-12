@@ -7,6 +7,7 @@ const { instrument } = require("@socket.io/admin-ui");
 const {createServer} =require("http")
 const { createAdapter } =require("@socket.io/redis-streams-adapter");
 const redis = require('./configurations/redis')
+const prisma = require('./configurations/db')
 dotenv.config()
 
 
@@ -57,9 +58,12 @@ io.on("connection", (socket) => {
     socket.join(socket.room);
     console.log(`Socket ${socket.id} joined room ${socket.room}`);
 
-    socket.on("message", (data) => {
+    socket.on("message", async (data) => {
         console.log("Server side message:", data);
 
+        await prisma.chats.create({
+            data:data
+        })
         // Emit only to others in the same room
         socket.to(socket.room).emit("message", data);
 

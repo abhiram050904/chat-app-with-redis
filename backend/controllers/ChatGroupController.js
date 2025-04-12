@@ -56,12 +56,7 @@ const prisma=require('../configurations/db')
     const getChatGroupById = async (req, res) => {
         try {
             const { id } = req.params;
-            const user = req.user;
-    
-            if (!user) {
-                return res.status(401).json({ message: "Unauthorized" });
-            }
-    
+            
             const chatGroup = await prisma.chatGroup.findUnique({
                 where: {
                     id: id,
@@ -72,7 +67,7 @@ const prisma=require('../configurations/db')
                 return res.status(404).json({ message: "Chat group not found" });
             }
     
-            return res.status(200).json(chatGroup);
+            return res.status(200).json({data:chatGroup});
         } catch (err) {
             console.error("Error fetching chat group:", err);
             return res.status(500).json({ message: "Something went wrong. Please try again" });

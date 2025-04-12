@@ -1,38 +1,40 @@
 'use client';
 
-import { getSocket } from '@/lib/socket.config';
-import React, { useEffect, useRef } from 'react';
+// import { getSocket } from '@/lib/socket.config';/
+import React, { useEffect, useRef, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 import { Button } from '../ui/button';
+import ChatSidebar from './ChatSideBar';
+import ChatNav from './ChatNav';
+import ChatUserDialog from './ChatUserDialog';
+import Chats from './Chats';
 
-const ChatBase = ({groupId}:{groupId:string}) => {
-  const socketRef = useRef(getSocket(groupId));
-  
-  useEffect(() => {
-    const socket = socketRef.current;
-    socket.auth={
-      room:groupId
+const ChatBase = ({group,users,oldMessages}:{group:ChatGroupType,users:Array<GroupChatUserType> | [],oldMessages:Array<MessageType> | []}) => {
+
+
+  const [open,setOpen]=useState(true)
+  const [chatUser,setChatUser]=useState<GroupChatUserType>()
+
+  useEffect(()=>{
+    const data=localStorage.getItem(group.id)
+    if(data){
+      const pData=JSON.parse(data)
+      setChatUser(pData)
     }
-    if (!socket.connected) {
-      socket.connect();
-    }
+  },[group.id])
 
-    socket.on('message', (data: any) => {
-      console.log('Received socket message:', data);
-    });
-
-    return () => {
-      socket.disconnect(); // properly clean up
-    };
-  }, []);
-
-  const handleClick = () => {
-    socketRef.current.emit('message', { name: 'abhi', id: uuidV4() });
-  };
 
   return (
-    <div>
-      <Button onClick={handleClick}>Send ME</Button>
+    <div className='flex'>
+      <ChatSidebar users={users}/>
+      <div className='w-full md:w-4/5 bg-gradient-to-b from-gray-50 to-white'>
+      {open?
+      <ChatUserDialog open={open} setOpen={setOpen} group={group}/>
+      :
+        <ChatNav chatGroup={group} users={users}/>
+      }
+      <Chats group={group} chatUser={chatUser} oldMessages={oldMessages}/>
+      </div>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import React from 'react'
 import { authOptions, CustomSession } from '../api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth'
 import CreateChat from '@/components/groupchat/CreateChat'
-import { fetchChatGroups } from '../fetch/groupFetch'
+import { fetchChatGroups } from '../../fetch/groupFetch'
 import GroupChatCard from '@/components/groupchat/GroupChatCard'
 
   const page = async() => {
